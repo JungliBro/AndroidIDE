@@ -49,7 +49,7 @@ val Project.simpleVersionName: String
   get() {
 
     val version = rootProject.version.toString()
-    val regex = Regex("^v\\d+\\.?\\d+\\.?\\d+-\\w+")
+    val regex = Regex("^v\\d+\\.?\\d+\\.?\\d+(?:-\\w+)?")
 
     val simpleVersion = regex.find(version)?.value?.substring(1)?.also {
       if (shouldPrintVersionName) {
@@ -116,11 +116,8 @@ val Project.publishingVersion: String
  */
 val Project.downloadVersion: String
   get() {
-    return if (CI.isCiBuild || isFDroidBuild) {
-      publishingVersion
-    } else {
-      "latest.integration"
-    }
+    // Always use the local publishing version to prevent build failures when the snapshot server is down
+    return publishingVersion
     
   }
 
